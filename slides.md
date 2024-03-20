@@ -6,12 +6,6 @@
 background: /public/background.jpeg
 # some information about your slides, markdown enabled
 title: Vuejs Amsterdam
-info: |
-  ## Slidev Starter Template
-  Presentation slides for developers.
-
-  Learn more at [Sli.dev](https://sli.dev)
-# apply any unocss classes to the current slide
 class: text-center
 # https://sli.dev/custom/highlighters.html
 highlighter: shiki
@@ -23,502 +17,412 @@ transition: slide-left
 mdc: true
 ---
 
-# Highlights from Vue.js Conference Amsterdam
-
-Presentation slides for developers
-
-<div class="pt-12">
-  <span @click="$slidev.nav.next" class="px-2 py-1 rounded cursor-pointer" hover="bg-white bg-opacity-10">
-    Press Space for next page <carbon:arrow-right class="inline"/>
-  </span>
-</div>
-
-<div class="abs-br m-6 flex gap-2">
-  <button @click="$slidev.nav.openInEditor()" title="Open in Editor" class="text-xl slidev-icon-btn opacity-50 !border-none !hover:text-white">
-    <carbon:edit />
-  </button>
-  <a href="https://github.com/slidevjs/slidev" target="_blank" alt="GitHub" title="Open in GitHub"
-    class="text-xl slidev-icon-btn opacity-50 !border-none !hover:text-white">
-    <carbon-logo-github />
-  </a>
-</div>
-
-<!--
-The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
--->
+# VUEJS AMSTERDAM 2024
+<br><br><br><br><br><br><br><br><br><br>
 
 ---
-layout: two-cols
-layoutClass: gap-16
 hideInToc: true
 ---
 
 # Table of contents
 
-::right::
 
-<Toc minDepth="1" maxDepth="2"></Toc>
+<Toc minDepth="1" maxDepth="1"></Toc>
 
 ---
-layout: image-right
-image: https://cover.sli.dev
----
 
-# Code
+# Nuxt server components
 
-Use code snippets and get the highlighting directly, and even types hover![^1]
+Non-interactive component without any client JS
+- smaller bundle size
+- privileged code runs securely
+- support all the features of normal components
 
-```ts {all|5|7|7-8|10|all} twoslash
-// TwoSlash enables TypeScript hover information
-// and errors in markdown code blocks
-// More at https://shiki.style/packages/twoslash
+<br>
 
-import { computed, ref } from 'vue'
-
-const count = ref(0)
-const doubled = computed(() => count.value * 2)
-
-doubled.value = 2
+```html {all|5|all}
+<template>
+  <div>
+    <HighlightedMarkdown markdown="# Headline" />
+    <!-- Counter will be loaded and hydrated client-side -->
+    <Counter nuxt-client :count="5" />
+  </div>
+</template>
 ```
 
-<arrow v-click="[4, 5]" x1="350" y1="310" x2="195" y2="334" color="#953" width="2" arrowSize="1" />
+<arrow v-click="[1,2]" x1="350" y1="290" x2="235" y2="335" color="#953" width="2" arrowSize="1" />
 
-<!-- This allow you to embed external code blocks -->
-<<< @/snippets/external.ts#snippet
-
-<!-- Footer -->
-[^1]: [Learn More](https://sli.dev/guide/syntax.html#line-highlighting)
-
-<!-- Inline style -->
-<style>
-.footnotes-sep {
-  @apply mt-5 opacity-10;
-}
-.footnotes {
-  @apply text-sm opacity-75;
-}
-.footnote-backref {
-  display: none;
-}
-</style>
+[Learn more](https://nuxt.com/docs/guide/directory-structure/components#server-components)
 
 <!--
-Notes can also sync with clicks
+Nuxt server components are non interactive components without any client javascript
 
-[click] This will be highlighted after the first click
+When rendering an island component, the content of the island component is static, thus no JS is downloaded client-side.
 
-[click] Highlighted with `count = ref(0)`
+It can have the props
+When their props update, this will result in a network request that will update the rendered HTML in-place.
 
-[click:3] Last click (skip two clicks)
+-these components no longer need to be hydrated or tracked by Vue, 
+
+-Server components allow you to extract logic out of your client-side bundle.
+When your logic requires access to a database or needs a private key or secret, server components can be a useful solution
+
+[click] You can partially hydrate a component by setting a nuxt-client attribute on the component you wish to be loaded client-side.
 -->
 
 ---
+
+# Nuxt hub (alpha)
+
+Build full-stack Nuxt apps, on the <span v-mark.red>edge</span>
+<ul >
+<li>integrated with Cloudflare</li>
+<li>local development support</li>
+<li>SQL database, key-value storage, blob storage</li>
+</ul>
+
+
+[Learn more](https://hub.nuxt.com/)
+
+<!--
+NuxtHub aims to provide a complete backend experience for Nuxt apps, allowing developers to build full-stack applications on the Edge
+
+What does it mean to build applications on the Edge?
+
+[click]In September 2017, Cloudflare introduced Cloudflare Workers, giving the ability to run JavaScript on their edge network. This means your code will deploy on the entire edge network in over a hundred locations worldwide in about 30 seconds. This technology allows you to focus on writing your application close to your users, wherever they are in the world. It unlocks the ability to server-render pages in ~50ms from all over the world when using a platform like CloudFlare Workers, without having to deal with servers, load balancers and caching, for about $0.5 per million requests. 
+
+Nuxt hub offers a seamless integration with Cloudflare's infrastructure, providing access to SQL databases to store your applications data, key-value storage to store JSON data accessible globally with low latency and blob storage to store static assets such as images videos and more
+
+This setup is ideal for applications that require low-latency data access and high-speed caching.
+-->
+
+---
+title: Server state
+---
+
+# Server state
+
+Data fetched from an API or a backend server
+
+<v-clicks>
+
+- Challenges with Global Stores
+- [TanStack Query](https://tanstack.com/query/latest) and soon [Pinia Colada (WIP)](https://github.com/posva/pinia-colada) as a solution
+- Caching and Automatic Updates
+- Still a Place for Global Stores
+
+</v-clicks>
+
+<!--
+Server state refers to the data fetched from an API or a backend server. 
+This data is not yet processed or manipulated by the client-side code. When working with server state, it is essential to handle asynchronous data fetching and caching to ensure a smooth user experience.
+
+Dividing state into two categories, server state and client state, can make the task of managing state more manageable, reducing the amount of code required and minimizing the risk of bugs and other issues.
+
+[click] Using Pinia (or similar global stores) for server state can lead to unnecessary complexity and boilerplate code, as it wasn't specifically designed for server-state management. It's more suited for client-side state that doesn't frequently update from server responses. 
+
+ For server-state, especially data that benefits from caching and invalidation patterns
+[click] tools like TanStack Query are more efficient, reducing requests and simplifying data synchronization across components
+
+[click] It offers a powerful caching mechanism that reduces the number of requests to the server, improving the performance of applications. Automatically updates the UI with the latest data without manual intervention, ensuring the user interface is always up-to-date. It simplifies data fetching, reduces boilerplate, and enables easy sharing of server state across components.
+
+Actually I have never used tanstack query myself and I know many of you have, so If I am wrong, please feel free to correct me
+
+[click] Global stores like Pinia still play a crucial role in managing non-server state, such as UI state, user preferences, or complex inter-component interactions that do not directly correspond to server data. These scenarios benefit from a centralized state management system, where the focus is on client-side. Global stores provide a structured way to manage these types of state, ensuring consistency and reactivity across the application.
+-->
+
+---
+title: Server state example
 level: 2
 ---
 
-# Shiki Magic Move
-
-Powered by [shiki-magic-move](https://shiki-magic-move.netlify.app/), Slidev supports animations across multiple code snippets.
-
-Add multiple code blocks and wrap them with <code>````md magic-move</code> (four backticks) to enable the magic move. For example:
-
+# Server state
 ````md magic-move
-```ts {*|2|*}
-// step 1
-const author = reactive({
-  name: 'John Doe',
-  books: [
-    'Vue 2 - Advanced Guide',
-    'Vue 3 - Basic Guide',
-    'Vue 4 - The Mystery'
-  ]
-})
-```
-
-```ts {*|1-2|3-4|3-4,8}
-// step 2
-export default {
-  data() {
-    return {
-      author: {
-        name: 'John Doe',
-        books: [
-          'Vue 2 - Advanced Guide',
-          'Vue 3 - Basic Guide',
-          'Vue 4 - The Mystery'
-        ]
-      }
-    }
-  }
-}
-```
-
 ```ts
-// step 3
-export default {
-  data: () => ({
-    author: {
-      name: 'John Doe',
-      books: [
-        'Vue 2 - Advanced Guide',
-        'Vue 3 - Basic Guide',
-        'Vue 4 - The Mystery'
-      ]
-    }
-  })
-}
-```
+import { defineStore } from 'pinia'
 
-Non-code blocks are ignored.
+type MetadataDto = {
+  name: string,
+  imgUrl: string
+}
+
+export const useMetadataStore = defineStore('metadata', {
+  const state = { 
+    name: undefined,
+    imgUrl: undefined
+  }
+
+  const isLoading = computed(() => !state.name || !state.imgUrl);
+
+  const updateMetadata = async () => {
+    const response = await fetch("https://639df98e1ec9c6657bb6f91b.mockapi.io/myself");
+    const newData = await response.json() as MetadataDto;
+    state.name = newData.name;
+    state.imgUrl = newData.imgUrl;
+  },
+})
+
+return { state, isLoading, updateMetadata };
+```
 
 ```vue
-<!-- step 4 -->
-<script setup>
-const author = {
-  name: 'John Doe',
-  books: [
-    'Vue 2 - Advanced Guide',
-    'Vue 3 - Basic Guide',
-    'Vue 4 - The Mystery'
-  ]
+<script setup lang="ts">
+import { useQuery } from '@tanstack/vue-query'
+ 
+type MetadataDto = {
+  name: string,
+  imgUrl: string
 }
+
+const useMyselfQuery = () => {
+  return useQuery({
+    queryKey: ['myself'],
+    queryFn: async () => {
+      const response = await fetch(`https://639df98e1ec9c6657bb6f91b.mockapi.io/myself`);
+      const data = await response.json() as MetadataDto;
+      return data;
+    },
+    staleTime: Infinity,
+  })
+}
+
+const { isLoading, isError, data, error } = useMyselfQuery();
 </script>
 ```
 ````
 
----
-
-# Components
-
-<div grid="~ cols-2 gap-4">
-<div>
-
-You can use Vue components directly inside your slides.
-
-We have provided a few built-in components like `<Tweet/>` and `<Youtube/>` that you can use directly. And adding your custom components is also super easy.
-
-```html
-<Counter :count="10" />
-```
-
-<!-- ./components/Counter.vue -->
-<Counter :count="10" m="t-4" />
-
-Check out [the guides](https://sli.dev/builtin/components.html) for more.
-
-</div>
-<div>
-
-```html
-<Tweet id="1390115482657726468" />
-```
-
-<Tweet id="1390115482657726468" scale="0.65" />
-
-</div>
-</div>
-
 <!--
-Presenter note with **bold**, *italic*, and ~~striked~~ text.
+Talk about example using pinia
 
-Also, HTML elements are valid:
-<div class="flex w-full">
-  <span style="flex-grow: 1;">Left content</span>
-  <span>Right content</span>
-</div>
+[click] Example using TanStack query
 -->
 
 ---
 class: px-20
 ---
 
-# Themes
+# Supabase Realtime
 
-Slidev comes with powerful theming support. Themes can provide styles, layouts, components, or even configurations for tools. Switching between themes by just **one edit** in your frontmatter:
+Send and receive messages to connected clients
 
-<div grid="~ cols-2 gap-2" m="t-2">
+<v-clicks>
 
-```yaml
----
-theme: default
----
+   - broadcast
+   - presence
+   - postgres changes
+
+</v-clicks>
+
+```ts {hide|1-3|10-14|4-14|all}
+// Initialize the JS client
+import { createClient } from '@supabase/supabase-js'
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+// Create a function to handle inserts
+const handleInserts = (payload) => {
+  console.log('Change received!', payload)
+}
+
+// Listen to inserts
+supabase
+  .channel('todos')
+  .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'todos' }, handleInserts)
+  .subscribe()
 ```
 
-```yaml
+[Learn more](https://supabase.com/docs/guides/realtime)
+
+<!--
+What is supabase? 
+Supabase is an open-source platform that provides developers with tools to quickly build apps. It offers a PostgreSQL database, authentication, real-time data subscriptions, and file storage, all accessible through an API. Designed as an alternative to Firebase.
+
+Supabase provides a globally distributed cluster of Realtime servers that enable the following functionality:
+
+[click] Broadcast: sends rapid, temporary messages to other connected clients with low latency. You can use it to track mouse movements, for example.
+
+[click] Presence: sends user state between connected clients. You can use it to show an "online" status, which disappears when a user is disconnected.
+
+[click]  Postgres Changes: Listen to Postgres database changes and send them to authorized clients in real-time.
+
+[click:4] chat applications, live content updates, or collaborative tools, showcasing
+-->
+
 ---
-theme: seriph
+layout: two-cols
 ---
+
+# Formkit
+
+Efficient way for developers to create forms
+
+<v-clicks>
+
+- Single-component System
+- Built-in Validation
+- Accessibility-focused
+- Flexible Styling
+- Decentralized Node System
+- Extensible Schemas
+- UI Framework Compatibility
+
+</v-clicks>
+
+[Learn More](https://formkit.com/)
+
+::right::
+<br><br>
+
+````md magic-move
+```vue
+<template>
+  <FormKit type="text" />
+</template>
 ```
 
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-default/01.png?raw=true" alt="">
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-seriph/01.png?raw=true" alt="">
-
-</div>
-
-Read more about [How to use a theme](https://sli.dev/themes/use.html) and
-check out the [Awesome Themes Gallery](https://sli.dev/themes/gallery.html).
-
----
-
-# Clicks Animations
-
-You can add `v-click` to elements to add a click animation.
-
-<div v-click>
-
-This shows up when you click the slide:
-
-```html
-<div v-click>This shows up when you click the slide.</div>
+```vue
+<template>
+<FormKit 
+    type="text" 
+    name="name" 
+    id="name" 
+  />
+</template>
 ```
 
-</div>
+```vue
+<template>
+  <FormKit
+    type="text"
+    name="name"
+    id="name"
+    label="Name"
+    help="Your full name"
+    placeholder="“Jon Doe”"
+  />
+</template>
+```
+
+```vue
+<template>
+  <FormKit
+    type="range"
+    name="strength"
+    id="strength"
+    label="Strength"
+    value="5"
+    min="1"
+    max="10"
+    step="1"
+    help="How many strength points should this character have?"
+  />
+</template>
+```
+
+```vue
+<template>
+  <FormKit
+    type="range"
+    name="strength"
+    id="strength"
+    label="Strength"
+    value="5"
+    validation="min:2|max:9"
+    validation-visibility="live"
+    min="1"
+    max="10"
+    step="1"
+    help="How many strength points should this character have?"
+  />
+</template>
+```
+
+```vue
+<template>
+  <FormKit type="form">
+    <FormKit
+      type="range"
+      name="strength"
+      id="strength"
+      label="Strength"
+      value="5"
+      validation="min:2|max:9"
+      validation-visibility="live"
+      min="1"
+      max="10"
+      step="1"
+      help="How many strength points should this character have?"
+    />
+  </FormKit>
+</template>
+```
+````
+
+
+ <!--
+ FormKit is a comprehensive form-building framework designed specifically for Vue developers. It provides a robust platform for creating high-quality, production-ready forms with less code, offering features like inputs, validation, error handling, and more. What sets FormKit apart is its focus on a single-component system, accessibility by default, built-in validation, and extensible schemas for form generation. 
+
+[click] Single-component System: This simplifies form creation by using a unified component approach, reducing complexity and making form management more straightforward.
+
+[click] Built-in Validation: Offers out-of-the-box validation rules, making it easier to ensure data integrity without extensive custom coding.
+
+[click] Accessibility-focused: Prioritizes accessibility, ensuring forms are usable by everyone, including those with disabilities.
+
+[click] Flexible Styling: FormKit allows for easy customization of form appearance, enabling developers to align forms with their design systems or branding guidelines.
+
+[click] Decentralized Node System: Utilizes a unique, decentralized node system for managing form inputs, enhancing form performance and scalability.
+
+[click] Extensible Schemas: Supports dynamic form generation through extensible schemas, allowing for complex form structures to be defined and reused.
+
+[click] UI Framework Compatibility: Designed to work alongside any UI framework, FormKit provides versatility in development environments.
+
+CODE EXAMPLE 
+
+[click:5] In FormKit's architecture, nodes form the backbone of its system, representing inputs within a form. These nodes are interconnected in a tree-like structure, allowing for efficient and organized data and event management. This structure ensures that each node can operate independently while still communicating within the form's ecosystem, enhancing performance and customization.
+ -->
+ 
+
+---
+title: PrimeVue & TresJs
+---
+
+# PrimeVue
+
+UI suite for Vue.js consisting of a rich set of UI components
+
+[Learn more](https://primevue.org/)
 
 <br>
-
 <v-click>
 
-The <span v-mark.red="3"><code>v-mark</code> directive</span>
-also allows you to add
-<span v-mark.circle.orange="4">inline marks</span>
-, powered by [Rough Notation](https://roughnotation.com/):
+# TresJS
 
-```html
-<span v-mark.underline.orange>inline markers</span>
-```
+library to create WebGL 3D websites
+
+[Learn more](https://tresjs.org/)
 
 </v-click>
 
-<div mt-20 v-click>
+<!--
+component library
 
-[Learn More](https://sli.dev/guide/animations#click-animations)
+created by PrimeTek a world-renowned vendor of popular UI Component suites, including PrimeFaces, PrimeNG, and PrimeReact
 
-</div>
+PrimeFaces has been maintained actively since 2008
 
----
-preload: false
----
+version 4 of prime vue will be introduced this year
 
-# Motions
+[click]
 
-Motion animations are powered by [@vueuse/motion](https://motion.vueuse.org/), triggered by `v-motion` directive.
+Build 3D scene as they were Vue components
 
-```html
-<div
-  v-motion
-  :initial="{ x: -80 }"
-  :enter="{ x: 0 }">
-  Slidev
-</div>
-```
+It brings all the updated features of ThreeJS right away.
 
-<div class="w-60 relative mt-6">
-  <div class="relative w-40 h-40">
-    <img
-      v-motion
-      :initial="{ x: 800, y: -100, scale: 1.5, rotate: -50 }"
-      :enter="final"
-      class="absolute top-0 left-0 right-0 bottom-0"
-      src="https://sli.dev/logo-square.png"
-      alt=""
-    />
-    <img
-      v-motion
-      :initial="{ y: 500, x: -100, scale: 2 }"
-      :enter="final"
-      class="absolute top-0 left-0 right-0 bottom-0"
-      src="https://sli.dev/logo-circle.png"
-      alt=""
-    />
-    <img
-      v-motion
-      :initial="{ x: 600, y: 400, scale: 2, rotate: 100 }"
-      :enter="final"
-      class="absolute top-0 left-0 right-0 bottom-0"
-      src="https://sli.dev/logo-triangle.png"
-      alt=""
-    />
-  </div>
-
-  <div
-    class="text-5xl absolute top-14 left-40 text-[#2B90B6] -z-1"
-    v-motion
-    :initial="{ x: -80, opacity: 0}"
-    :enter="{ x: 0, opacity: 1, transition: { delay: 2000, duration: 1000 } }">
-    Slidev
-  </div>
-</div>
-
-<!-- vue script setup scripts can be directly used in markdown, and will only affects current page -->
-<script setup lang="ts">
-const final = {
-  x: 0,
-  y: 0,
-  rotate: 0,
-  scale: 1,
-  transition: {
-    type: 'spring',
-    damping: 10,
-    stiffness: 20,
-    mass: 2
-  }
-}
-</script>
-
-<div
-  v-motion
-  :initial="{ x:35, y: 40, opacity: 0}"
-  :enter="{ y: 0, opacity: 1, transition: { delay: 3500 } }">
-
-[Learn More](https://sli.dev/guide/animations.html#motion)
-
-</div>
-
----
-
-# LaTeX
-
-LaTeX is supported out-of-box powered by [KaTeX](https://katex.org/).
-
-<br>
-
-Inline $\sqrt{3x-1}+(1+x)^2$
-
-Block
-$$ {1|3|all}
-\begin{array}{c}
-
-\nabla \times \vec{\mathbf{B}} -\, \frac1c\, \frac{\partial\vec{\mathbf{E}}}{\partial t} &
-= \frac{4\pi}{c}\vec{\mathbf{j}}    \nabla \cdot \vec{\mathbf{E}} & = 4 \pi \rho \\
-
-\nabla \times \vec{\mathbf{E}}\, +\, \frac1c\, \frac{\partial\vec{\mathbf{B}}}{\partial t} & = \vec{\mathbf{0}} \\
-
-\nabla \cdot \vec{\mathbf{B}} & = 0
-
-\end{array}
-$$
-
-<br>
-
-[Learn more](https://sli.dev/guide/syntax#latex)
-
----
-
-# Diagrams
-
-You can create diagrams / graphs from textual descriptions, directly in your Markdown.
-
-<div class="grid grid-cols-4 gap-5 pt-4 -mb-6">
-
-```mermaid {scale: 0.5, alt: 'A simple sequence diagram'}
-sequenceDiagram
-    Alice->John: Hello John, how are you?
-    Note over Alice,John: A typical interaction
-```
-
-```mermaid {theme: 'neutral', scale: 0.8}
-graph TD
-B[Text] --> C{Decision}
-C -->|One| D[Result 1]
-C -->|Two| E[Result 2]
-```
-
-```mermaid
-mindmap
-  root((mindmap))
-    Origins
-      Long history
-      ::icon(fa fa-book)
-      Popularisation
-        British popular psychology author Tony Buzan
-    Research
-      On effectivness<br/>and features
-      On Automatic creation
-        Uses
-            Creative techniques
-            Strategic planning
-            Argument mapping
-    Tools
-      Pen and paper
-      Mermaid
-```
-
-```plantuml {scale: 0.7}
-@startuml
-
-package "Some Group" {
-  HTTP - [First Component]
-  [Another Component]
-}
-
-node "Other Groups" {
-  FTP - [Second Component]
-  [First Component] --> FTP
-}
-
-cloud {
-  [Example 1]
-}
-
-database "MySql" {
-  folder "This is my folder" {
-    [Folder 3]
-  }
-  frame "Foo" {
-    [Frame 4]
-  }
-}
-
-[Another Component] --> [Example 1]
-[Example 1] --> [Folder 3]
-[Folder 3] --> [Frame 4]
-
-@enduml
-```
-
-</div>
-
-[Learn More](https://sli.dev/guide/syntax.html#diagrams)
-
----
-src: ./pages/multiple-entries.md
-hide: false
----
-
----
-
-# Monaco Editor
-
-Slidev provides built-in Moanco Editor support.
-
-Add `{monaco}` to the code block to turn it into an editor:
-
-```ts {monaco}
-import { ref } from 'vue'
-import hello from './external'
-
-const code = ref('const a = 1')
-hello()
-```
-
-Use `{monaco-run}` to create an editor that can execute the code directly in the slide:
-
-```ts {monaco-run}
-function fibonacci(n: number): number {
-  return n <= 1
-    ? n
-    : fibonacci(n - 1) + fibonacci(n - 2) // you know, this is NOT the best way to do it :P
-}
-
-console.log(Array.from({ length: 10 }, (_, i) => fibonacci(i + 1)))
-```
+-->
 
 ---
 layout: center
 class: text-center
+hideInToc: true
 ---
 
-# Learn More
-
-[Documentations](https://sli.dev) · [GitHub](https://github.com/slidevjs/slidev) · [Showcases](https://sli.dev/showcases.html)
+# Questions?
